@@ -64,6 +64,14 @@ namespace BinaryTreeProblems
             int sum = 21;
             List<int> output = new List<int>();
 
+               //   7
+               // /    \
+               //3      4
+               // \      \
+               //   6      1
+               //  / \
+               // 2   5
+
             Node test = new Node(7);
             test.Left = new Node(3);
             test.Right = new Node(4);
@@ -75,6 +83,7 @@ namespace BinaryTreeProblems
             bool result2 = DoesPathAddUp(test, sum, output);
             Console.WriteLine("Does path add up for sum {0} : {1}", sum, result2);
 
+            Console.WriteLine("Path is");
             if (result2)
             {
                 for (int i = output.Count - 1; i >= 0; i--)
@@ -82,6 +91,14 @@ namespace BinaryTreeProblems
                     Console.Write(output[i] + " ");
                 }
             }
+
+            // TODO - Add test case for IsSubTree
+            // END TODO
+
+            Console.WriteLine();
+            int sum2 = 11;
+            Console.WriteLine("All paths with sum {0}", sum2);
+            FindSum(test, sum2);
         }
 
         // Problem 1: Given a binary tree, find node with maximum value
@@ -361,6 +378,111 @@ namespace BinaryTreeProblems
             }
 
             return leftResult || rightResult;
+        }
+
+        // Problem 13: You have two very large binary trees. T1 with millions of nodes
+        // and T2 with hundreds of nodes. Create an algorithm to decide if T2 is a subtree of 
+        // T1
+
+        bool IsSubTree(Node T1, Node T2)
+        {
+            if (T1 == null && T2 == null)
+            {
+                return true;
+            }
+
+            Node subTreeNode = FindNode(T1, T2);
+
+            if (subTreeNode == null)
+            {
+                return false;
+            }
+
+            return IsSubTree(subTreeNode.Left, T2) && IsSubTree(subTreeNode.Right, T2);
+        }
+
+        // Return if root2 is found in root1
+        Node FindNode(Node root1, Node root2)
+        {
+            if (root1 == null ||  root2 == null)
+            {
+                return null;
+            }
+
+            if (root1.Data == root2.Data)
+            {
+                return root1;
+            }
+
+            Node leftResult = FindNode(root1.Left, root2);
+
+            if (leftResult != null)
+            {
+                return leftResult;
+            }
+
+            return FindNode(root1.Right, root2);
+        }
+
+        // Problem 14: Given a binary tree and a sum value, print 
+        // all possible sets of nodes in a path
+        // that add up to the value. Note - all nodes in a given
+        // path do not have to add up to the sum, even a subset will 
+        // do
+
+        static void FindSum(Node n, int sum)
+        {
+            int depth = GetDepth(n);
+
+            int[] path = new int[depth];
+
+            FindSum(n, sum, path, 0);
+        }
+
+        static int GetDepth(Node n)
+        {
+            if (n == null)
+            {
+                return 0;
+            }
+
+            return (1 + Math.Max(GetDepth(n.Left), GetDepth(n.Right)));
+        }
+
+        static void FindSum(Node n, int sum, int[] path, int level)
+        {
+            if (n == null)
+            {
+                return;
+            }
+
+            path[level] = n.Data;
+
+            int tempSum = 0;
+
+            for (int i = level; i >= 0; i--)
+            {
+                tempSum += path[i];
+
+                if (tempSum == sum)
+                {
+                    Print(path, i, level);
+                }
+            }
+
+            FindSum(n.Left, sum, path, level + 1);
+            FindSum(n.Right, sum, path, level + 1);
+
+            path[level] = Int32.MinValue; // not to set to 0 since this could have been a negative value
+        }
+
+        static void Print(int[] path, int start, int end)
+        {
+            for (int i = start; i <= end; i++)
+            {
+                Console.Write(path[i] + " ");
+            }
+            Console.WriteLine();
         }
     }
 
