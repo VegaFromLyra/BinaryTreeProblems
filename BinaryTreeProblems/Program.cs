@@ -99,6 +99,10 @@ namespace BinaryTreeProblems
             int sum2 = 11;
             Console.WriteLine("All paths with sum {0}", sum2);
             FindSum(test, sum2);
+
+            // Test case for nodes at distance k from leaf ndoes
+            Console.WriteLine("Nodes at distance {0} from leaf", 1);
+            PrintNodesAtDistanceKFromLeaf(test, 1);
         }
 
         // Problem 1: Given a binary tree, find node with maximum value
@@ -483,6 +487,49 @@ namespace BinaryTreeProblems
                 Console.Write(path[i] + " ");
             }
             Console.WriteLine();
+        }
+
+        // Problem 15: Given a Binary Tree and a positive integer k, 
+        // print all nodes that are distance k from a leaf node
+
+        static void PrintNodesAtDistanceKFromLeaf(Node n, int k)
+        {
+            int depth = GetDepth(n);
+
+            bool[] visited = new bool[depth];
+
+            int[] arr = new int[depth];
+
+            PrintNodesAtDistanceKFromLeaf(n, k, arr, visited, 0);
+        }
+
+        // Pass in an array of size depth, which will be the max length of any path
+        // also pass in a visited array of same size so same values are not repeated
+        // At each node, add value to array and also mark that as visited.
+        // When the leaf node is encountered, check if (level - k) was not visited,
+        // in that case print it and mark as visited.
+        // remember to reset visited state when value is overwritten
+        static void PrintNodesAtDistanceKFromLeaf(Node n, int k, int[] arr, bool[] visited, int level)
+        {
+            if (n == null)
+            {
+                return;
+            }
+
+            arr[level] = n.Data;
+            // NOTE: reset the boolean flag when overwriting data
+            visited[level] = false;
+
+            if ((n.Left == null && n.Right == null) &&
+                (visited[level - k] == false) &&
+                ((level - k) >= 0))
+            {
+                Console.WriteLine("{0}", arr[level - k]);
+                visited[level - k] = true;
+            }
+
+            PrintNodesAtDistanceKFromLeaf(n.Left, k, arr, visited, level + 1);
+            PrintNodesAtDistanceKFromLeaf(n.Right, k, arr, visited, level + 1);
         }
     }
 
