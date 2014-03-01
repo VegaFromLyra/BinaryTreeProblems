@@ -103,6 +103,30 @@ namespace BinaryTreeProblems
             // Test case for nodes at distance k from leaf ndoes
             Console.WriteLine("Nodes at distance {0} from leaf", 1);
             PrintNodesAtDistanceKFromLeaf(test, 1);
+
+            // Test case for problem 17
+               /*    1
+                   /   \
+                  2     3
+                 /  \ 
+                4    5                     
+               / \                         
+              6   7                        */
+
+
+            Node root = new Node(1);
+            root.Left = new Node(2);
+            root.Right = new Node(3);
+            root.Left.Left = new Node(4);
+            root.Left.Right = new Node(5);
+            root.Left.Right.Left = new Node(6);
+            root.Left.Right.Right = new Node(7);
+
+            int a = 3;
+            int b = 7;
+            int distance = FindDistance(root, a, b);
+
+            Console.WriteLine("Distance between {0} and {1} is {2}", a, b, distance);
         }
 
         // Problem 1: Given a binary tree, find node with maximum value
@@ -503,7 +527,7 @@ namespace BinaryTreeProblems
             PrintNodesAtDistanceKFromLeaf(n, k, arr, visited, 0);
         }
 
-        // Pass in an array of size depth, which will be the max length of any path
+        // Problem 16: Pass in an array of size depth, which will be the max length of any path
         // also pass in a visited array of same size so same values are not repeated
         // At each node, add value to array and also mark that as visited.
         // When the leaf node is encountered, check if (level - k) was not visited,
@@ -531,6 +555,94 @@ namespace BinaryTreeProblems
             PrintNodesAtDistanceKFromLeaf(n.Left, k, arr, visited, level + 1);
             PrintNodesAtDistanceKFromLeaf(n.Right, k, arr, visited, level + 1);
         }
+
+        // Problem 17: Find distance between two given keys of a bianry tree
+        // Distance - minimum number of edges that need to be 
+        // traversed to get from node a to node b
+        // Dist(4,5) = 2
+        // Disr(4, 3) = 3
+        /*                1
+                        /   \
+                      2       3
+                    /  \ 
+                   4    5                                      
+                       / \                                 
+                      6   7                        */
+
+        // Guarantee - a and b should be present in tree
+        // rooted at n
+        static int FindDistance(Node n, int a, int b)
+        {
+            if (n == null)
+            {
+                return -1;
+            }
+
+            Node lcaNode = FindLCA(n, a, b);
+
+            return FindDistanceUtil(lcaNode, a, 0) +
+                   FindDistanceUtil(lcaNode, b, 0);
+        }
+
+
+        // Find distance between n and node represented by value
+        static int FindDistanceUtil(Node n, int value, int level)
+        {
+            if (n == null)
+            {
+                return -1;
+            }
+
+            if (n.Data == value)
+            {
+                return level;
+            }
+
+            int leftDistance = FindDistanceUtil(n.Left, value, level + 1);
+
+            if (leftDistance == -1)
+            {
+                return FindDistanceUtil(n.Right, value, level + 1);
+            }
+
+            return leftDistance;
+        }
+
+        static Node FindLCA(Node root, int a, int b)
+        {
+            if (root == null)
+            {
+                return null;
+            }
+
+            if (root.Data == a || root.Data == b)
+            {
+                return root;
+            }
+
+            Node leftResult = FindLCA(root.Left, a, b);
+            Node rightResult = FindLCA(root.Right, a, b);
+
+            if (leftResult != null && rightResult != null)
+            {
+                return root;
+            }
+            else if (leftResult != null)
+            {
+                return leftResult;
+            }
+            else if (rightResult != null)
+            {
+                return rightResult;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+
+
     }
 
     
