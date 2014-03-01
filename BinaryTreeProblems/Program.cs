@@ -127,6 +127,9 @@ namespace BinaryTreeProblems
             int distance = FindDistance(root, a, b);
 
             Console.WriteLine("Distance between {0} and {1} is {2}", a, b, distance);
+
+            int diameter = Diameter(root);
+            Console.WriteLine("Diameter of given tree is {0}", diameter);
         }
 
         // Problem 1: Given a binary tree, find node with maximum value
@@ -641,7 +644,40 @@ namespace BinaryTreeProblems
             }
         }
 
+        // Problem 18: Find the diameter of a binary tree
+        // The diameter of a tree (sometimes called the width) is the number of nodes on the longest path between two leaves in the tree
+        // Diameter of a tree is the largest of 3 things
+        // Diameter of T's left subtree
+        // Diameter of T's right subtree
+        // longest path through root = height(left sub tree) + 1 + height(right sub tree)
 
+        static int Diameter(Node n)
+        {
+            if (n == null)
+            {
+                return 0;
+            }
+
+            int leftHeight = Height(n.Left);
+            int rightHeight = Height(n.Right);
+
+            int leftDiameter = Diameter(n.Left);
+            int rightDiameter = Diameter(n.Right);
+
+            return Math.Max(leftHeight + rightHeight + 1,
+                            Math.Max(leftDiameter, rightDiameter));
+
+        }
+
+        static int Height(Node n)
+        {
+            if (n == null)
+            {
+                return 0;
+            }
+
+            return 1 + Math.Max(Height(n.Left), Height(n.Right));
+        }
 
     }
 
