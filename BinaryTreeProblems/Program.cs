@@ -429,7 +429,7 @@ namespace BinaryTreeProblems
                 return false;
             }
 
-            return IsSubTree(subTreeNode.Left, T2) && IsSubTree(subTreeNode.Right, T2);
+            return IsSubTree(subTreeNode.Left, T2.Left) && IsSubTree(subTreeNode.Right, T2.Right);
         }
 
         // Return if root2 is found in root1
