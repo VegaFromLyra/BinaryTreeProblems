@@ -415,44 +415,49 @@ namespace BinaryTreeProblems
         // and T2 with hundreds of nodes. Create an algorithm to decide if T2 is a subtree of 
         // T1
 
-        bool IsSubTree(Node T1, Node T2)
+        bool containsTree(Node t1, Node t2)
         {
-            if (T1 == null && T2 == null)
+            if (t2 == null)
             {
                 return true;
             }
 
-            Node subTreeNode = FindNode(T1, T2);
+            return IsSubTree(t1, t2);
+        }
 
-            if (subTreeNode == null)
+        bool IsSubTree(Node n1, Node n2)
+        {
+            if (n1 == null)
             {
                 return false;
             }
 
-            return IsSubTree(subTreeNode.Left, T2.Left) && IsSubTree(subTreeNode.Right, T2.Right);
+            if (n1.Data == n2.Data)
+            {
+                return Match(n1, n2);
+            }
+
+            return IsSubTree(n1.Left, n2) || IsSubTree(n1.Right, n2);
         }
 
-        // Return if root2 is found in root1
-        Node FindNode(Node root1, Node root2)
+        bool Match(Node n1, Node n2)
         {
-            if (root1 == null ||  root2 == null)
+            if (n1 == null & n2 == null)
             {
-                return null;
+                return true;
             }
 
-            if (root1.Data == root2.Data)
+            if (n1 == null || n2 == null)
             {
-                return root1;
+                return false;
             }
 
-            Node leftResult = FindNode(root1.Left, root2);
-
-            if (leftResult != null)
+            if (n1.Data != n2.Data)
             {
-                return leftResult;
+                return false;
             }
 
-            return FindNode(root1.Right, root2);
+            return Match(n1.Left, n2.Left) && Match(n1.Right, n2.Right);
         }
 
         // Problem 14: Given a binary tree and a sum value, print 
